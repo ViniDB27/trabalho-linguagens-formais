@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class especAreaView extends StatelessWidget {
-  const especAreaView({
+class EspecAreaView extends StatelessWidget {
+  const EspecAreaView({
     Key? key,
   }) : super(key: key);
 

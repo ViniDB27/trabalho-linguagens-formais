@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'widgets/code_area_view.dart';
+import 'widgets/element_state.dart';
 import 'widgets/spec_area_view.dart';
 import 'widgets/quad_area_view.dart';
 import 'widgets/quint_area_view.dart';
@@ -34,6 +35,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
   final List<String> code = [
     '# include <stdio.h>',
     'int main(void)',
@@ -46,6 +55,167 @@ class _MyHomePageState extends State<MyHomePage> {
     'return 0;',
     '}',
   ];
+
+  final dataTable = [
+    [
+      "E",
+      "E0",
+      "E1",
+      "E2",
+      "E3",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+    ],
+    [
+      "0",
+      "E0",
+      "-",
+      "E1*",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+    ],
+    [
+      "1",
+      "-",
+      "E2",
+      "E0*",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+    ],
+    [
+      "2",
+      "E2*",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+    ],
+    [
+      "3",
+      "E1",
+      "E3",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+    ],
+    [
+      "4",
+      "E1",
+      "E3*",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+    ],
+    [
+      "5",
+      "E1",
+      "E3*",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+    ],
+    [
+      "6",
+      "E1",
+      "E3*",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+    ],
+    [
+      "7",
+      "E1",
+      "E3*",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+    ],
+    [
+      "8",
+      "E1",
+      "E3",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+    ],
+    [
+      "9",
+      "E1",
+      "E3*",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+    ],
+    [
+      "10",
+      "E1",
+      "E3*",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+    ],
+  ];
+
+  List<List<String>> dataTableView = [];
 
   bool activePlay = false;
   int activeLine = 0;
@@ -60,14 +230,40 @@ class _MyHomePageState extends State<MyHomePage> {
   _playBuildCode() async {
     setState(() {
       activePlay = true;
+      dataTableView = [];
     });
 
-    for (int i = 0; i < code.length; i++) {
-      if (activePlay) {
+    for (int i = 0; i < code.length + 1; i++) {
+      activeLine = i;
+
+      List<String> temp = [];
+      dataTableView = [...dataTableView, temp];
+
+      final List<String> iterator =
+          dataTable[i + 1].where((element) => element != "-").toList();
+
+      for (var j = 0; j < iterator.length; j++) {
+        print(dataTable[i + 1][j]);
+
+        temp = [...temp, iterator[j]];
+
+        if (dataTableView.isNotEmpty) {
+          dataTableView.removeAt(dataTableView.length - 1);
+        }
+
         setState(() {
-          activeLine = i;
+          dataTableView.add(temp);
         });
-        await Future.delayed(const Duration(milliseconds: 1000));
+
+        if (!activePlay) {
+          break;
+        }
+
+        await Future.delayed(const Duration(milliseconds: 500));
+      }
+
+      if (!activePlay) {
+        break;
       }
     }
 
@@ -91,7 +287,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Row(
           children: [
             Container(
-              width: mediaQuery.size.width * 0.2,
+              width: mediaQuery.size.width * 0.1,
               height: mediaQuery.size.height,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -101,23 +297,55 @@ class _MyHomePageState extends State<MyHomePage> {
                     activePlay: activePlay,
                     activeLine: activeLine,
                   ),
-                  const especAreaView()
+                  const EspecAreaView(),
+                  const SizedBox(height: 10),
                 ],
               ),
             ),
             const SizedBox(width: 10),
             Container(
-              width: mediaQuery.size.width * 0.2,
+              width: mediaQuery.size.width * 0.1,
               height: mediaQuery.size.height,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const quadAreaView(),
-                  const SizedBox(height: 10),
-                  const quintAreaView(),
-                  const SizedBox(height: 10),
-                  customTable()
+                children: const [
+                  QuadAreaView(),
+                  QuintAreaView(),
+                  SizedBox(height: 10),
                 ],
+              ),
+            ),
+            Container(
+              width: mediaQuery.size.width * 0.2,
+              height: mediaQuery.size.height,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomTable(dataTable: dataTable),
+                ],
+              ),
+            ),
+            Container(
+              width: mediaQuery.size.width * 0.57,
+              height: mediaQuery.size.height,
+              padding: const EdgeInsets.all(10),
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                scrollDirection: Axis.horizontal,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: dataTableView
+                      .map((elements) => Row(
+                          children: elements
+                              .map((element) => ElementState(
+                                    element: element,
+                                    isFinal: element.contains("*"),
+                                  ))
+                              .toList()))
+                      .toList(),
+                ),
               ),
             ),
           ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class quintAreaView extends StatelessWidget {
-  const quintAreaView({
+class QuintAreaView extends StatelessWidget {
+  const QuintAreaView({
     Key? key,
   }) : super(key: key);
 

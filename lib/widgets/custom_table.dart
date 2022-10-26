@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 
-class customTable extends StatelessWidget {
-  customTable({
+class CustomTable extends StatelessWidget {
+  CustomTable({
     Key? key,
+    required this.dataTable,
   }) : super(key: key);
 
-  final datas = [
-    ["E", "E0", "E1", "E2", "E3"],
-    ["0", "E0", "-", "E1", "-"],
-    ["1", "-", "E2", "E0", "-"],
-    ["2", "E2", "-", "-", "-"],
-    ["3", "E1", "E3", "-", "-"],
-  ];
+  final List<List<String>> dataTable;
 
   Map<int, TableColumnWidth> _setColumnsWidth() {
-    final list = List.generate(datas.length, (index) => index);
+    final list = List.generate(dataTable.length, (index) => index);
 
     final map = Map<int, TableColumnWidth>.fromIterable(
       list,
@@ -31,7 +26,7 @@ class customTable extends StatelessWidget {
       border: TableBorder.all(),
       columnWidths: _setColumnsWidth(),
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      children: datas
+      children: dataTable
           .map((row) => TableRow(
                 children: row
                     .map((cell) => Container(

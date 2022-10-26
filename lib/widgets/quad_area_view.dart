@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class quadAreaView extends StatelessWidget {
-  const quadAreaView({
+class QuadAreaView extends StatelessWidget {
+  const QuadAreaView({
     Key? key,
   }) : super(key: key);
 
