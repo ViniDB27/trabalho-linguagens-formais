@@ -59,16 +59,16 @@ class _MyHomePageState extends State<MyHomePage> {
   final dataTable = [
     ["E", "E0", "E1", "E2", "E3", "-", "-", "-", "-", "-", "-"],
     ["0", "E0", "-", "E1*", "-", "-", "-", "-", "-", "-", "-"],
-    ["1", "-", "E2", "E0*", "-", "-", "-", "-", "-", "-", "-"],
+    ["1", "-", "E2", "E0*", "-", "-", "-", "E3", "-", "-", "-"],
     ["2", "E2*", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
     ["3", "E1", "E3", "-", "-", "-", "-", "-", "-", "-", "-"],
-    ["4", "E1", "E3*", "-", "-", "-", "-", "-", "-", "-", "-"],
+    ["4", "E1", "E3*", "-", "-", "E4", "-", "-", "-", "-", "-"],
     ["5", "E1", "E3*", "-", "-", "-", "-", "-", "-", "-", "-"],
     ["6", "E1", "E3*", "-", "-", "-", "-", "-", "-", "-", "-"],
     ["7", "E1", "E3*", "-", "-", "-", "-", "-", "-", "-", "-"],
-    ["8", "E1", "E3", "-", "-", "-", "-", "-", "-", "-", "-"],
+    ["8", "E1", "E3", "-", "-", "-", "-", "-", "E5", "-", "-"],
     ["9", "E1", "E3*", "-", "-", "-", "-", "-", "-", "-", "-"],
-    ["10", "E1", "E3*", "-", "-", "-", "-", "-", "-", "-", "-"],
+    ["10", "E1", "E3*", "-", "E8", "-", "-", "-", "-", "-", "-"],
   ];
 
   List<List<String>> dataTableView = [];
@@ -96,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
       dataTableView = [...dataTableView, temp];
 
       final List<String> iterator =
-          dataTable[i + 1].where((element) => element != "-").toList();
+          dataTable[i + 1].where((element) => element != "-" && element.contains("E")).toList();
 
       for (var j = 0; j < iterator.length; j++) {
         print(dataTable[i + 1][j]);
@@ -143,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Row(
           children: [
             Container(
-              width: mediaQuery.size.width * 0.1,
+              width: mediaQuery.size.width * 0.15,
               height: mediaQuery.size.height,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -160,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(width: 10),
             Container(
-              width: mediaQuery.size.width * 0.1,
+              width: mediaQuery.size.width * 0.15,
               height: mediaQuery.size.height,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -172,7 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Container(
-              width: mediaQuery.size.width * 0.35,
+              width: mediaQuery.size.width * 0.30,
               height: mediaQuery.size.height,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -183,11 +183,11 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Container(
-              width: mediaQuery.size.width * 0.35,
+              width: mediaQuery.size.width * 0.30,
               height: mediaQuery.size.height,
               padding: const EdgeInsets.all(10),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: dataTableView
                     .map((elements) => Row(
