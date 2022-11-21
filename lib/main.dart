@@ -56,25 +56,44 @@ class _MyHomePageState extends State<MyHomePage> {
     '}',
   ];
 
-  final dataTable = [
-    ["E", "E0", "E1", "E2", "E3", "-", "-", "-", "-", "-", "-"],
-    ["0", "E0", "-", "E1*", "-", "-", "-", "-", "-", "-", "-"],
-    ["1", "-", "E2", "E0*", "-", "-", "-", "E3", "-", "-", "-"],
-    ["2", "E2*", "-", "-", "-", "-", "-", "-", "-", "-", "-"],
-    ["3", "E1", "E3", "-", "-", "-", "-", "-", "-", "-", "-"],
-    ["4", "E1", "E3*", "-", "-", "E4", "-", "-", "-", "-", "-"],
-    ["5", "E1", "E3*", "-", "-", "-", "-", "-", "-", "-", "-"],
-    ["6", "E1", "E3*", "-", "-", "-", "-", "-", "-", "-", "-"],
-    ["7", "E1", "E3*", "-", "-", "-", "-", "-", "-", "-", "-"],
-    ["8", "E1", "E3", "-", "-", "-", "-", "-", "E5", "-", "-"],
-    ["9", "E1", "E3*", "-", "-", "-", "-", "-", "-", "-", "-"],
-    ["10", "E1", "E3*", "-", "E8", "-", "-", "-", "-", "-", "-"],
+  final staticTable = [
+    ["E", "<PR>", "<L>", "<AP>", "<FP>"],
+    ["E0", "E1, E2", "-", "-", "-"],
+    ["E1", "-", "E2", "-", "-"],
+    ["E2", "-", "-", "E3", "-"],
+    ["E3", "-", "E4", "-", "-"],
+    ["E4", "-", "-", "-", "E5*"],
+    ["E5*", "-", "-", "-", "-"],
   ];
 
-  List<List<String>> dataTableView = [];
+  List<String> dataTableView = [];
 
   bool activePlay = false;
   int activeLine = 0;
+
+  void setArrowInfo(String cell) {
+    switch (cell) {
+      case "E0":
+        setState(() => activeLine = 0);
+        break;
+      case "E2":
+        setState(() => activeLine = 2);
+        break;
+      case "E3":
+        setState(() => activeLine = 3);
+        break;
+      case "E4":
+        setState(() => activeLine = 4);
+        break;
+      case "E5":
+        setState(() => activeLine = 5);
+        break;
+      case "E1,E2":
+      default:
+        setState(() => activeLine = 1);
+        break;
+    }
+  }
 
   _stopBuildCode() {
     setState(() {
@@ -89,38 +108,38 @@ class _MyHomePageState extends State<MyHomePage> {
       dataTableView = [];
     });
 
-    for (int i = 0; i < code.length + 1; i++) {
-      activeLine = i;
+    final dataTable = [
+      ["E", "<PR>", "<L>", "<AP>", "<FP>"],
+      ["E0", "E1, E2", "-", "-", "-"],
+      ["E1", "-", "E2", "-", "-"],
+      ["E2", "-", "-", "E3", "-"],
+      ["E3", "-", "E4", "-", "-"],
+      ["E4", "-", "-", "-", "E5*"],
+      ["E5*", "-", "-", "-", "-"],
+    ];
 
-      List<String> temp = [];
-      dataTableView = [...dataTableView, temp];
+    dataTable.removeAt(0);
 
-      final List<String> iterator =
-          dataTable[i + 1].where((element) => element != "-" && element.contains("E")).toList();
+    setState(() => dataTableView.add("E0"));
+    setArrowInfo("E0");
 
-      for (var j = 0; j < iterator.length; j++) {
-        print(dataTable[i + 1][j]);
+    for (var elements in dataTable) {
+      elements.removeAt(0);
 
-        temp = [...temp, iterator[j]];
+      setState(() => activeLine += 1);
 
-        if (dataTableView.isNotEmpty) {
-          dataTableView.removeAt(dataTableView.length - 1);
+      for (var element in elements) {
+        if (!element.contains("-")) {
+          await Future.delayed(const Duration(milliseconds: 1000));
+
+          setArrowInfo(element);
+          setState(() {
+            dataTableView.add(element);
+          });
         }
-
-        setState(() {
-          dataTableView.add(temp);
-        });
-
-        if (!activePlay) {
-          break;
-        }
-
-        await Future.delayed(const Duration(milliseconds: 500));
+        if (!activePlay) break;
       }
-
-      if (!activePlay) {
-        break;
-      }
+      if (!activePlay) break;
     }
 
     setState(() {
@@ -143,7 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Row(
           children: [
             Container(
-              width: mediaQuery.size.width * 0.15,
+              width: mediaQuery.size.width * 0.25,
               height: mediaQuery.size.height,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -153,53 +172,43 @@ class _MyHomePageState extends State<MyHomePage> {
                     activePlay: activePlay,
                     activeLine: activeLine,
                   ),
-                  const EspecAreaView(),
+                  const QuadAreaView(),
                   const SizedBox(height: 10),
                 ],
               ),
             ),
             const SizedBox(width: 10),
             Container(
-              width: mediaQuery.size.width * 0.15,
+              width: mediaQuery.size.width * 0.20,
               height: mediaQuery.size.height,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  QuadAreaView(),
-                  QuintAreaView(),
-                  SizedBox(height: 10),
-                ],
-              ),
-            ),
-            Container(
-              width: mediaQuery.size.width * 0.30,
-              height: mediaQuery.size.height,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CustomTable(dataTable: dataTable),
+                  const QuintAreaView(),
+                  CustomTable(dataTable: staticTable),
+                  const SizedBox(height: 10),
                 ],
               ),
             ),
             Container(
-              width: mediaQuery.size.width * 0.30,
+              width: mediaQuery.size.width * 0.45,
               height: mediaQuery.size.height,
               padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: dataTableView
-                    .map((elements) => Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: elements
-                            .map((element) => ElementState(
-                                  element: element,
-                                  isFinal: element.contains("*"),
-                                ))
-                            .toList()))
-                    .toList(),
+                children: [
+                  Row(
+                    children: dataTableView
+                        .map(
+                          (element) => ElementState(
+                            element: element,
+                            isFinal: element.contains("*"),
+                          ),
+                        )
+                        .toList(),
+                  )
+                ],
               ),
             ),
           ],

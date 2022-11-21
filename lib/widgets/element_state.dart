@@ -12,13 +12,38 @@ class ElementState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<String> cells = element.split(",");
+
+    String setArrowInfo(String cell) {
+      switch (cell) {
+        case "E0":
+          return "";
+        case "E2":
+          return "<L>";
+        case "E3":
+          return "<AP>";
+        case "E4":
+          return "<L>";
+        case "E5":
+          return "<FP>";
+        case "E1,E2":
+        default:
+          return "<PR>";
+      }
+    }
+
     return Row(
       children: [
         Container(
           width: 50,
           height: 50,
-          child: Center(
-            child: Text("----->"),
+          child: Column(
+            children: [
+              Text(setArrowInfo(element)),
+              const Center(
+                child: Text("----->"),
+              ),
+            ],
           ),
         ),
         isFinal
@@ -49,19 +74,24 @@ class ElementState extends StatelessWidget {
                   ),
                 ),
               )
-            : Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 1,
-                  ),
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: Center(
-                  child: Text(element),
-                ),
+            : Column(
+                children: cells
+                    .map((e) => Container(
+                          margin: const EdgeInsets.only(top: 10),
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: Center(
+                            child: Text(e),
+                          ),
+                        ))
+                    .toList(),
               )
       ],
     );
