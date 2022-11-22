@@ -24,7 +24,7 @@ class ElementState extends StatelessWidget {
           return "<AP>";
         case "E4":
           return "<L>";
-        case "E5":
+        case "E5*":
           return "<FP>";
         case "E1,E2":
         default:
